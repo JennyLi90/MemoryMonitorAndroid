@@ -21,35 +21,114 @@ import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 
 public class MainUI extends JFrame{
+private static Boolean flag=true;
 
-private Boolean flag=false;
 
- MainUI(){
-	    
+
+public static Boolean getFlag() {
+	return flag;
+}
+public static void setFlag(Boolean flag) {
+	MainUI.flag = flag;
+}
+MainUI(){
+}
+ public  void runCommand(JButton stopBtn,JTextArea resultText,String command){
+ 
+ 
+ Process process;
+	while(flag){
+	try {
+		System.out.println(""+flag);
+		process = Runtime.getRuntime().exec(command);
+		InputStreamReader ir=new InputStreamReader(process.getInputStream());
+		LineNumberReader input= new LineNumberReader(ir);
+		String line;
+		line=input.readLine();
+		resultText.append(line);
+		resultText.append("\n");
+		stopBtn.addActionListener(new ActionListener()
+		{
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e)
+			{
+				
+				System.out.println("click");
+				
+			
+				setFlag(!flag);
+				if(stopBtn.getText().equals("Stop")){
+				stopBtn.setText("Continue");
+				runCommand(stopBtn, resultText, command);
+				}
+				else{
+					stopBtn.setText("Stop");
+					
+				}
+				
+			}
+			
+		}
+		);
 		
-	}
- public void ScrollPaneTest(){
-     JPanel panel = new JPanel();
-     panel.setLayout(new BorderLayout());
-     JTextArea text = new JTextArea();
-     text.setEditable(true);
-     text.setAutoscrolls(true);
-     Dimension d = new Dimension(20, 20);
-     text.setMinimumSize(d);
-     
-     JScrollPane pane = new JScrollPane(text);
-//Code fragment below doesn't work. 
-//     pane.add(text);
-     panel.add(pane,BorderLayout.CENTER);
-     
-
-     this.setLayout(new BorderLayout());
-     this.add(panel,BorderLayout.CENTER);
-     this.setVisible(true);
- }
+		
+	/*	if(getFlag()){//if flag is true
+		stopBtn.addActionListener(new ActionListener()
+		{
+			@SuppressWarnings("static-access")
+			public void actionPerformed(ActionEvent e)
+			{
+				
+				MainUI temp=new MainUI();
+				System.out.println("!!!!Before"+temp.getFlag());
+			
+				temp.setFlag(false);
+				stopBtn.setText("Continue");
+				
+				//}
+				System.out.println("!!!!After"+temp.getFlag());
+			}
+			
+		}
+		);
+		}
+		else{
+			stopBtn.addActionListener(new ActionListener()
+			{
+				@SuppressWarnings("static-access")
+				public void actionPerformed(ActionEvent e)
+				{
+					
+					MainUI temp=new MainUI();
+					System.out.println("!!!!Before!!!!!!"+temp.getFlag());
+				    stopBtn.setText("Stop");
+					temp.setFlag(true);
+					System.out.println("!!!!After"+temp.getFlag());	
+					
+					
+				}
+			}
+		
+			);
+			continue;
+			
+			
+			
+		}*/
 	
+		
+	} catch (IOException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+
+	
+	}
+ }
+
 	public static void main(String args[])
 	{
+		MainUI ui=new MainUI();
 		String adbPath="/Users/jenny/Downloads/adt/sdk/platform-tools/adb";
 		//MainUI testui=new MainUI();
 		//testui.ScrollPaneTest();
@@ -59,15 +138,21 @@ private Boolean flag=false;
 		stopBtn.setBounds(30,50,80,30);
 		stopBtn.setLocation(200, 200);
 		
+		
 		frame.add(stopBtn);
 		
 		
-	
+		
+		//MainUI.setFlag(true);
+		
+		
+		flag=true;
 		//add scroll 
 		
 		Container contentPane=frame.getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		
+		contentPane.add(stopBtn,BorderLayout.PAGE_START);
 		
 		JPanel resultPanel=new JPanel();
 		//resultPanel.setBounds(100,100,400,100);
@@ -104,54 +189,9 @@ private Boolean flag=false;
 		frame.setVisible(true);
 		String command=adbPath+" shell dumpsys meminfo| grep com.pixlr.express";
 		
-		Process process;
-		while(true){
-		try {
-			
-			process = Runtime.getRuntime().exec(command);
-			InputStreamReader ir=new InputStreamReader(process.getInputStream());
-			LineNumberReader input= new LineNumberReader(ir);
-			String line;
-			line=input.readLine();
-			//resultText.append(System.get);
-			resultText.append(line);
-			//resultText.setCaretPosition(resultText.getDocument().getLength()-1);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	
-		resultText.append("\n");
-		}
+		ui.runCommand(stopBtn, resultText, command);
 		
-		/*startBtn.addActionListener(new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				System.out.println("");
-				String command="/Users/jenny/Downloads/adt/sdk/platform-tools/adb shell dumpsys meminfo| grep com.pixlr.express";
-				
-					Process process;
-					try {
-						
-						process = Runtime.getRuntime().exec(command);
-						InputStreamReader ir=new InputStreamReader(process.getInputStream());
-						LineNumberReader input= new LineNumberReader(ir);
-						String line;
-						line=input.readLine();
-						//resultText.append(System.get);
-						resultText.append(line);
-						//resultText.setCaretPosition(resultText.getDocument().getLength()-1);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				
-				resultText.append("\n");
-			}
-			
-		}
-		);*/
+		
 		
 	
 		
