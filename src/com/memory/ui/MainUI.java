@@ -33,7 +33,11 @@ public static void setFlag(Boolean flag) {
 }
 MainUI(){
 }
- public  void runCommand(JButton stopBtn,JTextArea resultText,String command){
+
+public void getMemory()
+{
+	}
+ public void runCommand(JButton stopBtn,JTextArea resultText,String command){
  
  
  Process process;
@@ -47,6 +51,8 @@ MainUI(){
 		line=input.readLine();
 		resultText.append(line);
 		resultText.append("\n");
+		
+		if(stopBtn.getText().equals("Stop")){
 		stopBtn.addActionListener(new ActionListener()
 		{
 			@SuppressWarnings("static-access")
@@ -56,65 +62,17 @@ MainUI(){
 				System.out.println("click");
 				
 			
-				setFlag(!flag);
-				if(stopBtn.getText().equals("Stop")){
-				stopBtn.setText("Continue");
-				runCommand(stopBtn, resultText, command);
-				}
-				else{
-					stopBtn.setText("Stop");
-					
-				}
+				setFlag(false);
+				stopBtn.setVisible(false);
+				stopBtn.setEnabled(false);
 				
 			}
 			
 		}
 		);
-		
-		
-	/*	if(getFlag()){//if flag is true
-		stopBtn.addActionListener(new ActionListener()
-		{
-			@SuppressWarnings("static-access")
-			public void actionPerformed(ActionEvent e)
-			{
-				
-				MainUI temp=new MainUI();
-				System.out.println("!!!!Before"+temp.getFlag());
-			
-				temp.setFlag(false);
-				stopBtn.setText("Continue");
-				
-				//}
-				System.out.println("!!!!After"+temp.getFlag());
-			}
-			
 		}
-		);
-		}
-		else{
-			stopBtn.addActionListener(new ActionListener()
-			{
-				@SuppressWarnings("static-access")
-				public void actionPerformed(ActionEvent e)
-				{
-					
-					MainUI temp=new MainUI();
-					System.out.println("!!!!Before!!!!!!"+temp.getFlag());
-				    stopBtn.setText("Stop");
-					temp.setFlag(true);
-					System.out.println("!!!!After"+temp.getFlag());	
-					
-					
-				}
-			}
 		
-			);
-			continue;
-			
-			
-			
-		}*/
+	
 	
 		
 	} catch (IOException e1) {
@@ -140,11 +98,6 @@ MainUI(){
 		
 		
 		frame.add(stopBtn);
-		
-		
-		
-		//MainUI.setFlag(true);
-		
 		
 		flag=true;
 		//add scroll 
@@ -184,14 +137,12 @@ MainUI(){
 		//frame.add(resultText);
 		frame.pack();
 		//frame.show();
-		frame.setSize(600,600);
+		frame.setSize(600,800);
 		frame.setLayout(null);
 		frame.setVisible(true);
 		String command=adbPath+" shell dumpsys meminfo| grep com.pixlr.express";
-		
 		ui.runCommand(stopBtn, resultText, command);
-		
-		
+	
 		
 	
 		
